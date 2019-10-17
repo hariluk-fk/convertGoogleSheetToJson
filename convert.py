@@ -6,23 +6,28 @@ def googleSheetToCSV():
 
     f = open('/Users/hariluk/Desktop/TaxReport/Template/JSON/csvTmp.csv', 'r')
 
+    if os.path.exists('/Users/hariluk/Desktop/TaxReport/Template/JSON/invoiceCSVTmp.csv'):
+    
+        os.remove('/Users/hariluk/Desktop/TaxReport/Template/JSON/invoiceCSVTmp.csv')
+        print('Remove CSV file complete !!!!!!!')
+
     f = open( '/Users/hariluk/Desktop/TaxReport/Template/JSON/invoiceCSVTmp.csv', 'w')
 
     out = response.text
     f.write(out)
 
-    if os.path.exists('/Users/hariluk/Desktop/TaxReport/Template/JSON/invoiceCSVTmp.csv'):
-        print('CSV file template is complete, going to Json !!!!!')
-        CSVToJson('/Users/hariluk/Desktop/TaxReport/Template/JSON/invoiceCSVTmp.csv')
+    if os.path.exists('/Users/hariluk/Desktop/TaxReport/Template/JSON/invoiceCSVTmp1.csv'):
+        print('CSV file template complete, going to Json !!!!!')
+        CSVToJson('/Users/hariluk/Desktop/TaxReport/Template/JSON/invoiceCSVTmp1.csv')
     else:
-        print('CSV file template is invalid!')
+        print('CSV file template invalid!')
 
 def CSVToJson(csvFile):
     # Open the CSV
     f = open( csvFile, 'r' )
 
     reader = csv.DictReader( f, fieldnames = ( "DocTaxNo","TaxDate","TaxRate","TransNo", "CreditTerm", 
-            "TaxNo", "CompanyName", "Branch", "Address1", "Address2", "Address3", "PostNo", "DeliveryName", "DeliveryAddress1", "DeliveryAddress2", "DeliveryAddress3",
+            "TaxNo", "CompanyName", "Branch", "Address1", "Address2", "Address3", "DeliveryName", "DeliveryAddress1", "DeliveryAddress2", "DeliveryAddress3",
             "PackingNo", "PackingType", "PackingPackage", "DeliveryNo", "DeliverySeq", "InvoiceNo", "InvoiceSeq", "DeliveryQty", "PurchaseNo", "PurchaseType",
                     "PartNo", "PartType", "PartName", "Retail", "Price", "Discount"
        ))
@@ -59,11 +64,12 @@ def CSVToJson(csvFile):
     for header in storeHeader:
         f = open( csvFile, 'r' )
         reader = csv.DictReader( f, fieldnames = ("DocTaxNo","TaxDate","TaxRate","TransNo", "CreditTerm", 
-            "TaxNo", "CompanyName", "Branch", "Address1", "Address2", "Address3", "PostNo", "DeliveryName", "DeliveryAddress1", "DeliveryAddress2", "DeliveryAddress3",
+            "TaxNo", "CompanyName", "Branch", "Address1", "Address2", "Address3", "DeliveryName", "DeliveryAddress1", "DeliveryAddress2", "DeliveryAddress3",
             "PackingNo", "PackingType", "PackingPackage", "DeliveryNo", "DeliverySeq", "InvoiceNo", "InvoiceSeq", "DeliveryQty", "PurchaseNo", "PurchaseType",
                     "PartNo", "PartType", "PartName", "Retail", "Price", "Discount"))
         for row in reader:
             if header["docTaxNo"] == row["DocTaxNo"]:
+                # if header["invoiceDetail"] == row["PackingNo"]:
                     invoiceDetail = {
                         "packingNo":                row["PackingNo"], 
                         "packingType":              row["PackingType"],
@@ -90,9 +96,14 @@ def CSVToJson(csvFile):
     # Parse the CSV into JSON
     out = json.dumps(header, indent=4)
     # Save the JSON
+    if os.path.exists('/Users/hariluk/Desktop/TaxReport/Complete/JSON/invoiceJson.json'):
+
+        os.remove('/Users/hariluk/Desktop/TaxReport/Complete/JSON/invoiceJson.json')
+        print('Remove Json file complete !!!!!!!')
+    
     f = open( '/Users/hariluk/Desktop/TaxReport/Complete/JSON/invoiceJson.json', 'w')
     f.write(out)
 
-    print('Json file is complete !!!!!!!')
+    print('Json file complete !!!!!!!')
 
 googleSheetToCSV()
